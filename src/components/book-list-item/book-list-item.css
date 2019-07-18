@@ -1,0 +1,27 @@
+.books-cards{
+    width: 670px;
+}
+
+.book-list-item {
+    display: flex;
+    margin: 15px 0;
+  }
+.img-book{
+   max-width: 20rem;
+}
+
+  
+ .book-title {
+    font-size: 1.6rem;
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 1rem;
+  }
+  
+ .book-price {
+    font-size: 1.4rem;
+  }
+
+  .add-to-cart{
+position: relative;
+margin-top: 2rem;
+  }

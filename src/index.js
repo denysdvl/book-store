@@ -1,32 +1,25 @@
-import { async } from "q";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
+import { BrowserRouter as Router } from 'react-router-dom'
+import BookService from './services/bookstore-services'
+import { BookServiceProvider } from './components/bookstore-service-context';
+import ErrorBoundry from "./components/error/error-boundry"
 
-export default class BookService {
-    constructor(){
+import App from './components/app'
+import store from './store'
 
-    const __apiBase = "http://reactjs-hsnet.mocklab.io/book";
+const bookstoreService = new BookService();
 
-        async function getResource() {
-            const res = await fetch(`${__apiBase}`);
-            if (!res.ok) {
-                throw new Error(`Could not fetch ${__apiBase}` +
-                    ` received ${res.status}`);
-            }
-            return await res.json();
-        }
-
-    this.getAllBook = async () => {
-        const res = await getResource();
-        return res.books.map(this._transformBook);
-    }
-    this._transformBook = (book) => {
-        return{
-           id:  book.bookId,
-           title: book.bookName,
-           author: book.author,
-           price: book.price,
-           coverImage: book.img,
-           pagesAmount:  book.pagesAmount
-        }
-    }
-}   
-}
+ReactDOM.render(
+<Provider store={store}>
+  <ErrorBoundry>
+    <BookServiceProvider value={bookstoreService}>
+      <Router>
+        <App/>
+      </Router>
+    </BookServiceProvider>
+  </ErrorBoundry>
+</Provider>,
+document.getElementById('root')
+  );
