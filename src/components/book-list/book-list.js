@@ -19,31 +19,41 @@ import {
 import Spinner from '../spinner'
 import './book-list.css';
 
-const BookList = ({ books, onAddedToCart }) => {
+const BookList = ({ visibleItem, onAddedToCart,}) => {
     return(
-        <ul className="list-group m-5">
-            {  books.map((book) => {
-    return (
+        <div><ul className="list-group m-5">
+            {  visibleItem.map((book) => {
+               return (
         <li  className="d-flex  align-items-center"
          key={book.id}>
              <BookListItem book={book} 
              onAddedToCart={() => onAddedToCart(book.id)}/>
              </li>
             )
+                
          })
             }
         </ul>
+       
+        </div>
+        
     );
 }
 
 class BookListContainer extends Component {
 
     componentDidMount() {
-     this.props.fetchBooks();
+        const { fetchBooks} = this.props;
+     fetchBooks();
     }
-
+    
     render() {
-        const { books, loading, error, onAddedToCart } = this.props;
+        const { visibleItem, 
+            loading, 
+            error, 
+            onAddedToCart ,
+           
+         } = this.props;
         if(loading){
             return <Spinner/>
         }
@@ -51,19 +61,21 @@ class BookListContainer extends Component {
             return <ErrorIndicator/>
         }
            return <BookList 
-           books={books}
-           onAddedToCart={onAddedToCart}/>
+           visibleItem={visibleItem}
+           onAddedToCart={onAddedToCart} 
+           />
           }
 }
 
 
 
-const mapStateToProps = ({bookList: {books, loading, error}}) => {
+const mapStateToProps = ({bookList: {books, loading, error, visibleItem}}) => {
     return {
         books,
+        visibleItem,
         loading,
         error
-    };
+     };
 };
 
 const mapDispatchToProps = (dispatch, {bookService}) => {

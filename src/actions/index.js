@@ -45,9 +45,28 @@ const onDecreaseToCart = (bookId) => {
     }
 }
 
+const onSearchToBook = (label)=> {
+        return {
+        type: 'SEARCH_TO_BOOK',
+        payload: label
+    }
+        
+}
+const onChangePage = (id) => {
+    console.log(id)
+    return {
+        type: 'PAGES_TO_BOOK',
+        payload: id
+    }
+
+}
+ 
+
 export {
     fetchBooks,
     onAddedToCart,
     onDeleteToCart,
-    onDecreaseToCart
+    onDecreaseToCart,
+    onSearchToBook,
+    onChangePage
 }

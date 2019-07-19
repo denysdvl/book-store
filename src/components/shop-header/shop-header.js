@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 const ShopHeader = ({ items, total }) => {
   return (
     <header className="shop-header row">
-      <Link to='/'>
+      <Link to='/store/'>
       <div className="logo text-mute" >Books Store</div>
       </Link>
       <Link to="/cart" className="shopping-cart">
