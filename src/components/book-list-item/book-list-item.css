@@ -1,5 +1,5 @@
 .books-cards{
-    width: 670px;
+    width: 650px;
 }
 
 .book-list-item {
@@ -9,7 +9,9 @@
 .img-book{
    max-width: 20rem;
 }
-
+.img{
+  max-width: 250px
+}
   
  .book-title {
     font-size: 1.6rem;
@@ -21,7 +23,11 @@
     font-size: 1.4rem;
   }
 
-  .add-to-cart{
+  .btn-book{
 position: relative;
 margin-top: 2rem;
+width: 120px;
+  }
+  .book-details{
+    width: 300px;
   }

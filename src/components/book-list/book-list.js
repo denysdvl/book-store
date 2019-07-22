@@ -8,7 +8,9 @@ import {
 } from 'react-redux';
 import {
     fetchBooks,
-    onAddedToCart
+    onAddedToCart,
+    onChangePage,
+    onBuy,
 } from '../../actions';
 import {
     compose
@@ -17,9 +19,10 @@ import {
     withBookService
 } from '../hoc';
 import Spinner from '../spinner'
+import ErrorBoundry from "../error/error-boundry"
 import './book-list.css';
 
-const BookList = ({ visibleItem, onAddedToCart,}) => {
+const BookList = ({ visibleItem, onAddedToCart, onBuy}) => {
     return(
         <div><ul className="list-group m-5">
             {  visibleItem.map((book) => {
@@ -27,7 +30,8 @@ const BookList = ({ visibleItem, onAddedToCart,}) => {
         <li  className="d-flex  align-items-center"
          key={book.id}>
              <BookListItem book={book} 
-             onAddedToCart={() => onAddedToCart(book.id)}/>
+             onAddedToCart={() => onAddedToCart(book.id)}
+             onBuy={() => onBuy(book.id)}/>
              </li>
             )
                 
@@ -44,15 +48,16 @@ class BookListContainer extends Component {
 
     componentDidMount() {
         const { fetchBooks} = this.props;
+        
      fetchBooks();
     }
-    
+   
     render() {
         const { visibleItem, 
             loading, 
             error, 
             onAddedToCart ,
-           
+            onBuy
          } = this.props;
         if(loading){
             return <Spinner/>
@@ -60,16 +65,20 @@ class BookListContainer extends Component {
         if(error){
             return <ErrorIndicator/>
         }
-           return <BookList 
+           return (<ErrorBoundry>
+               <BookList 
            visibleItem={visibleItem}
-           onAddedToCart={onAddedToCart} 
+           onAddedToCart={onAddedToCart}
+           onBuy={onBuy} 
            />
+           </ErrorBoundry>);
           }
 }
 
 
 
-const mapStateToProps = ({bookList: {books, loading, error, visibleItem}}) => {
+const mapStateToProps = (state) => {
+   const {bookList: {books, loading, error, visibleItem}} = state.bookReduser
     return {
         books,
         visibleItem,
@@ -81,12 +90,14 @@ const mapStateToProps = ({bookList: {books, loading, error, visibleItem}}) => {
 const mapDispatchToProps = (dispatch, {bookService}) => {
     return {
         fetchBooks: fetchBooks(dispatch, bookService),
-        onAddedToCart: (id) => dispatch(onAddedToCart(id))
+        onAddedToCart: (id) => dispatch(onAddedToCart(id)),
+        onChangePage: (id)=> dispatch(onChangePage(id)),
+        onBuy: (id) => dispatch(onBuy(id))
     }
 };
 
 
-export default compose(
+export default (compose(
     withBookService(),
     connect(mapStateToProps, mapDispatchToProps)
-)(BookListContainer)
+)(BookListContainer))

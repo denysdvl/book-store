@@ -8,12 +8,11 @@ const search = (state, label) => {
   
   };
 
-const checkPage = (state, action, check) => {
-    const {bookList: {page, books, per_page}} = state
-    
+const checkPage = (state, action, check, page) => {
+    const {bookList: { books, per_page}} = state
     const myBooks = action;
     let start_count = 0;
-    const start_offset = (page - 1) * per_page;
+    const start_offset = (page - 1) * per_page
    if(books.length===myBooks.length || check){
     const arr = myBooks.filter((book, index) =>(index >= start_offset && start_count++ < per_page));  
     return arr
@@ -31,7 +30,7 @@ const countPages = (state, action) => {
 }
 
 const updateBookList = (state, action) => {
-   console.log(action.type)
+ 
     if(state === undefined){
         return{
        books: [],
@@ -39,7 +38,6 @@ const updateBookList = (state, action) => {
        error: null,
        label: "",
        visibleItem: [],
-       page: 1,
        per_page: 2,
        pages: []
        }
@@ -48,55 +46,54 @@ const updateBookList = (state, action) => {
             case 'FETCH_BOOKS_REQUEST':
             return {
                 per_page: state.bookList.per_page,
+                pages: [],   
                 books: [],
-                    loading: true,
-                    error: null,
-                    visibleItem: [],
-                    page: state.bookList.page,
-                    pages: []   
+                loading: true,
+                error: null,
+                visibleItem: []
+                    
             }
         
             case 'FETCH_BOOKS_SUCCESS':
             return {
                 per_page: state.bookList.per_page,
+                pages: countPages(state, action.payload, 1),
+                btnNone: true,
                 books: action.payload,
                 loading: false,
                 error: null,
-                visibleItem:  checkPage(state, action.payload, true),
-                page: state.bookList.page,
-                pages: countPages(state, action.payload)
-                
-                
+                visibleItem:  checkPage(state, action.payload, true, 1)  
             }
             case 'FETCH_BOOKS_FAILURE':
                 return {
                     per_page: state.bookList.per_page,
+                    pages: [],
                     books: [],
-                        loading: false,
-                        error: action.payload,
-                        visibleItem: [],
-                        page: state.bookList.page,
-                        pages: []
+                    loading: false,
+                    error: action.payload,
+                    visibleItem: []
+                    
                 }
             case 'SEARCH_TO_BOOK':
                 return {
                     per_page: state.bookList.per_page,
+                    pages: state.bookList.pages,
                     books: state.bookList.books,
                     loading: false,
                     error: null,
-                    visibleItem: checkPage(state, search(state, action.payload), false),
-                    page: state.bookList.page,
-                    pages: state.bookList.pages
+                    visibleItem: checkPage(state, search(state, action.payload), false, 0)
+                   
                 }   
             case 'PAGES_TO_BOOK': 
             return {
                 per_page: state.bookList.per_page,
+                start_offset: (state.bookList.page - 1) * state.bookList.per_page,
+                pages: state.bookList.pages,
                 books: state.bookList.books,
                 loading: false,
                 error: null,
-                visibleItem: checkPage(state, state.bookList.books, true),
-                page: action.payload,
-                pages: state.bookList.pages
+                visibleItem: checkPage(state, state.bookList.books, true, action.payload)
+            
             }
                 default:
                         return state.bookList;

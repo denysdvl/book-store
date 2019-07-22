@@ -1,16 +1,16 @@
 import React from 'react'
 import SearchPanel from '../search-panel'
-
+import ErrorBoundry from "../error/error-boundry"
 import BookList from '../book-list'
 
 const HomePage = () => {
-
+    
      return (
-         <div > 
-              <SearchPanel/>
-              <BookList />
-             
-         </div>
+          <ErrorBoundry>
+              <SearchPanel />
+              <BookList  />
+             </ErrorBoundry>
+   
             
 
      );

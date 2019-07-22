@@ -1,4 +1,3 @@
-    
 import React, {
   Component
 } from 'react';
@@ -12,21 +11,27 @@ import {
 } from '../hoc';
 import {connect} from 'react-redux';
 import { onSearchToBook, onChangePage } from '../../actions';
+import ErrorBoundry from "../error/error-boundry"
 
 class SearchPanelContainer extends Component {
-    
+  
  onLabelChange = (event) => {
     const label = event.target.value;
     event.preventDefault();
     this.props.onSearchToBook(label);
   };
+
   render() {
-    const { pages} = this.props;
-    return <SearchPanel
+    const { pages, onChangePage } = this.props;
+    return (
+      <ErrorBoundry >
+        <SearchPanel
     onSearchToBook={ this.onLabelChange}
-    onChangePage={this.props.onChangePage}
+    onChangePage={onChangePage}
     pages={pages}
     />
+      </ErrorBoundry>
+    )
   }
 }
 
@@ -37,33 +42,32 @@ const SearchPanel = ({onSearchToBook, onChangePage, pages}) =>  {
         <div>
            <input type="text"
           className="form-control search-input"
-          placeholder="type to search"
+          placeholder="search"
           onChange={onSearchToBook}
            />
         </div>
-      <div>
-        <ul>
+      <div className="btn-group mr-2" role="group" aria-label="Second group" >    
 {
   pages.map((page,index)=>{
     return(
       <button
       key={index}
       onClick={() => onChangePage(index+1)}
-      className="btn btn-secondary"
+      type="button" className="btn btn-secondary"
         >{index+1}</button>
     )
   })
-} 
-      </ul>
-        
+}         
       </div>
       </div>
     ); 
 };
 
-const mapStateToProps = ({bookList: {pages}}) => {
+const mapStateToProps = (state) => {
+ const {bookList: {pages, btnNone}} = state.bookReduser
   return{
-    pages
+    pages,
+    btnNone
   }
 };
 

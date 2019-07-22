@@ -4,41 +4,47 @@ import {connect} from 'react-redux';
 import {
   onDeleteToCart, 
   onDecreaseToCart,
-  onAddedToCart} from '../../actions';
+  onAddedToCart,
+  onBuyOrder} from '../../actions';
+  import ErrorBoundry from "../error/error-boundry"
 
-const ShoppingCartTable = ({items, total, onIncrease, onDecrease, onDelete}) => {
+
+const ShoppingCartTable = ({items, total, onIncrease, onDecrease, onDelete, onBuyOrder}) => {
+ const btnBuy = (+total===0)?null : <button onClick={() => onBuyOrder()} className="btn btn-success btn-lg  mx-3">
+    ZAMÓW
+ </button>
  
-  const renderRow = (item, idx) => {
-    const {id , title, count, total} = item
-    return (
-      <tr key={id}>
-      <td>{idx + 1}</td>
-      <td>{title}</td>
-      <td>{count}</td>
-      <td>${total}</td>
-      <td>
-        <button
-        onClick={() => onDelete(id)}
-         className="btn btn-outline-danger btn-sm float-right">
-          <i className="fa fa-trash-o" />
-        </button>
-        <button 
-        onClick={()=> onIncrease(id)}
-        className="btn btn-outline-success btn-sm float-right">
-          <i className="fa fa-plus-circle" />
-        </button>
-        <button
-        onClick={() => onDecrease(id)}
-        className="btn btn-outline-warning btn-sm float-right">
-          <i className="fa fa-minus-circle" />
-        </button>
-      </td>
-    </tr>    
-    );
-  }
- 
+const renderRow = (item, idx) => {
+  const {id , title, count, total} = item
   return (
-    <div className="shopping-cart-table">
+    <tr key={id}>
+    <td>{idx + 1}</td>
+    <td>{title}</td>
+    <td>{count}</td>
+    <td>${total}</td>
+    <td>
+      <button
+      onClick={() => onDelete(id)}
+       className="btn btn-outline-danger btn-sm float-right">
+        <i className="fa fa-trash-o" />
+      </button>
+      <button 
+      onClick={()=> onIncrease(id)}
+      className="btn btn-outline-success btn-sm float-right">
+        <i className="fa fa-plus-circle" />
+      </button>
+      <button
+      onClick={() => onDecrease(id)}
+      className="btn btn-outline-warning btn-sm float-right">
+        <i className="fa fa-minus-circle" />
+      </button>
+    </td>
+  </tr>    
+  );
+}
+ 
+  return (<ErrorBoundry>
+<div className="shopping-cart-table">
       <h2>Your Order</h2>
       <table className="table">
         <thead>
@@ -57,16 +63,26 @@ const ShoppingCartTable = ({items, total, onIncrease, onDecrease, onDelete}) => 
           }
        </tbody>
       </table>
-
+      
+      
+      
       <div className="total">
-        Total: ${total}
+        Total: ${total}  
+        {
+          btnBuy
+        }
       </div>
+      
     </div>
+    
+  </ErrorBoundry>
+    
   );
 };
 
 
-const mapStateToProps = ({shoppingCart: {cartItems, orderTotal}}) => {
+const mapStateToProps = (state) => {
+  const {shoppingCart: {cartItems, orderTotal}} = state.bookReduser
   return {
      items: cartItems,
      total: orderTotal
@@ -77,7 +93,8 @@ const mapStateToProps = ({shoppingCart: {cartItems, orderTotal}}) => {
 const mapDispatchToProps =  {
       onIncrease: onAddedToCart,
       onDelete: onDeleteToCart,
-      onDecrease: onDecreaseToCart
+      onDecrease: onDecreaseToCart,
+      onBuyOrder: onBuyOrder
   };
 
 

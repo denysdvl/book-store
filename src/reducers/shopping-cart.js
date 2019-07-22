@@ -55,22 +55,21 @@ const updateOrder = (state, payload, typeUpdate) => {
     const {bookList: {books}, shoppingCart: {cartItems, orderTotal, orderCount}} = state;
     const book = books.find(({id}) => id === bookId);
     const checkBook = cartItems.findIndex(({id}) => id === bookId);
-    const checkCount = cartItems.findIndex(({count}) => count === 1);    
     switch(typeUpdate){
     case -1:
-        if(checkCount === -1){
-                return{
+        const checkCount = cartItems[checkBook].count; 
+        if(checkCount===1){
+               return{ 
+                orderCount: updateTotalCount(typeUpdate, orderCount, cartItems, checkBook),
+                orderTotal: updateTotalOrder(typeUpdate, orderTotal, book.price, cartItems, checkBook),
+                cartItems: deletedCartItems(cartItems, checkBook)
+           }     
+        }
+        else{ return{
                     orderCount: updateTotalCount(typeUpdate, orderCount, cartItems, checkBook),
                     orderTotal: updateTotalOrder(typeUpdate, orderTotal, book.price, cartItems, checkBook),
                     cartItems: updateCartItems(cartItems, checkBook, typeUpdate, book.price)
-                }
-        }
-        else{
-            return{ 
-                orderCount: updateTotalCount(typeUpdate, orderCount, cartItems, checkBook),
-                orderTotal: updateTotalOrder(typeUpdate, orderTotal, book.price, cartItems, checkBook),
-                cartItems: deletedCartItems(cartItems, checkCount)
-           }
+                }                
         }
     case 1:
         if (checkBook === -1) {

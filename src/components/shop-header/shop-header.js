@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 const ShopHeader = ({ items, total }) => {
   return (
     <header className="shop-header row">
-      <Link to='/store/'>
+      <Link to='/'>
       <div className="logo text-mute" >Books Store</div>
       </Link>
       <Link to="/cart" className="shopping-cart">
@@ -20,7 +20,8 @@ const ShopHeader = ({ items, total }) => {
 };
 
 
-const mapStateToProps = ({shoppingCart: {orderCount, orderTotal}}) => {
+const mapStateToProps = (state) => {
+ const {shoppingCart: {orderCount, orderTotal}} = state.bookReduser
   return {
      items: orderCount,
      total: orderTotal
