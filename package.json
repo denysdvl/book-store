@@ -1,7 +1,7 @@
 {
   "name": "book-store",
   "version": "0.1.0",
-  "homepage": "http://denysdvl.github.io/book-store",
+  "homepage": "http://denysdvl.github.io/book-store/",
   "private": false,
   "dependencies": {
     "bootstrap": "^4.3.1",
